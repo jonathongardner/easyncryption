@@ -7,7 +7,7 @@
       </select-files>
       <files :files='files' @clear='clearFilesToEnc'>
         <template v-slot:default="{ file }">
-          {{ file.filename }}
+          {{ file.filename }} {{ file.error }}
           <!-- <enc-file :file='file' @delete='deleteEncFile'/> -->
         </template>
       </files>
@@ -47,13 +47,18 @@ export default {
         const id = Math.random()
         this.files.push({ filename: file.name, id })
         encryptFile(this.encKey, file).then(({ encFilename, encDataURL }) => {
-          const index = this.files.findIndex(file => file.id === id)
-          if (index !== -1) { // if -1 assume deleted
-            this.$set(this.files[index], 'encDataURL', encDataURL)
-            this.$set(this.files[index], 'encFilename', encFilename)
-          }
+          this.updateFile(id, { encFilename, encDataURL })
+        }).catch(err => {
+          this.updateFile(id, { error: 'Something went wrong, try again.', detailedError: err.message })
         })
       })
+    },
+    updateFile (id, data) {
+      const index = this.files.findIndex(file => file.id === id)
+      if (index === -1) { // if -1 assume deleted
+        return
+      }
+      this.$set(this.files, index, Object.assign({}, this.files[index], data))
     },
     clearFilesToEnc () {
       this.files = []

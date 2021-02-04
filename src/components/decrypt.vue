@@ -46,14 +46,19 @@ export default {
       files.forEach(file => {
         const id = Math.random()
         this.files.push({ encFilename: file.name, id })
-        decryptFile(this.encKey, file).then(({ encFilename, encDataURL }) => {
-          const index = this.files.findIndex(file => file.id === id)
-          if (index !== -1) { // if -1 assume deleted
-            this.$set(this.files[index], 'dataURL', encDataURL)
-            this.$set(this.files[index], 'filename', encFilename)
-          }
+        decryptFile(this.encKey, file).then(({ filename, dataURL }) => {
+          this.updateFile(id, { filename, dataURL })
+        }).catch(err => {
+          this.updateFile(id, { error: 'Something went wrong, try again.', detailedError: err.message })
         })
       })
+    },
+    updateFile (id, data) {
+      const index = this.files.findIndex(file => file.id === id)
+      if (index === -1) { // if -1 assume deleted
+        return
+      }
+      this.$set(this.files, index, Object.assign({}, this.files[index], data))
     },
     clearFilesToEnc () {
       this.files = []

@@ -3,9 +3,9 @@ export default {
   ignore: true,
   label: 'No',
   warn: () => 'No encryption method selected. Are you sure you want to continue?',
-  generateKey(identifier) {
+  generateKey() {
     return Promise.resolve({
-      filename: `${identifier}.enk`, toSave: { encryptionKey: '', decryptionKey: '' }
+      extension: '.enk', toSave: { encryptionKey: '', decryptionKey: '' }
     })
   },
   encrypt: (key, dataUrl) => Promise.resolve([dataUrl]),

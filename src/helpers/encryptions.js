@@ -1,15 +1,14 @@
-// import SHA256 from 'cryptojs'
 import { readDataURL, readFile } from './file-functions'
 import Nothing from './encryptions/nothing'
-// import AES from './encryptions/aes'
-// import RSA from './encryptions/rsa'
-// import RSA_AES from './encryptions/rsa+aes'
+import AES from './encryptions/aes'
+import RSA from './encryptions/rsa'
+import RSA_AES from './encryptions/rsa+aes'
 
 export const encryptions = {
   [Nothing.type]: Nothing,
-  // [AES.type]: AES,
-  // [RSA.type]: RSA,
-  // [RSA_AES.type]: RSA_AES,
+  [AES.type]: AES,
+  [RSA.type]: RSA,
+  [RSA_AES.type]: RSA_AES,
 }
 
 const download = (filename, uri) => {

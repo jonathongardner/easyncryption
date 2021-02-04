@@ -1,20 +1,25 @@
 import RSA from './rsa'
-import AES, { genKey } from './aes'
-const type = 'rsa+aes'
+import AES from './aes'
 
-const mod = {
-  type,
+export default {
+  type: 'rsa+aes',
   label: 'RSA+AES',
-  generateDataKey(key, { length = 32 } = {}) {
-    const dataKey = genKey(length)
-    return Promise.resolve({
-      type: AES.type, identifier: 'file key', encryptionKey: dataKey, decryptionKey: dataKey
-    })
+  generateKey: RSA.generateKey,
+  encrypt: async ({ encryptionKey: rsaKey }, text) => {
+    const [{toSave: { encryptionKey: aesKey }}] = await AES.generateKey()
+    const aesKeyToEnc = JSON.stringify(aesKey)
+
+    const toReturn = await Promise.all(
+      [RSA.encrypt({ encryptionKey: rsaKey }, aesKeyToEnc), AES.encrypt({ encryptionKey: aesKey }, text)]
+    ).then(promises => promises.flat())
+
+    return toReturn
   },
-  encrypt: RSA.encrypt,
-  decrypt: RSA.decrypt,
+  decrypt: async ({ decryptionKey: rsaKey }, [encAesKey, encText]) => {
+    const stringAesKey = await RSA.decrypt({ decryptionKey: rsaKey }, [encAesKey])
+    const aesKey = JSON.parse(stringAesKey)
+
+    return await AES.decrypt({ decryptionKey: aesKey }, [encText])
+  },
   algorithm: RSA.algorithm,
 }
-mod.generateKey = RSA.generateKey.bind(mod)
-
-export default mod
