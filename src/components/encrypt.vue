@@ -5,10 +5,9 @@
       <select-files @add='addEncFiles'>
         Select Files to Encrypt
       </select-files>
-      <files :files='files' @clear='clearFilesToEnc'>
+      <files :files='files' @clear='clearFiles'>
         <template v-slot:default="{ file }">
-          {{ file.filename }} {{ file.error }}
-          <!-- <enc-file :file='file' @delete='deleteEncFile'/> -->
+          <enc-file :file='file' @delete='deleteFile'/>
         </template>
       </files>
     </template>
@@ -18,13 +17,14 @@
 <script>
 import SelectEnk from '@/components/form/select-enk'
 import SelectFiles from '@/components/form/select-files'
-import Files from '@/components/common/files'
+import Files from '@/components/files/files'
+import EncFile from '@/components/files/enc-file'
 import { encryptFile } from '@/helpers/encryptions'
 
 export default {
   name: 'Encrypt',
   components: {
-    SelectEnk, SelectFiles, Files
+    SelectEnk, SelectFiles, Files, EncFile
   },
   data () {
     return {
@@ -49,7 +49,7 @@ export default {
         encryptFile(this.encKey, file).then(({ encFilename, encDataURL }) => {
           this.updateFile(id, { encFilename, encDataURL })
         }).catch(err => {
-          this.updateFile(id, { error: 'Something went wrong, try again.', detailedError: err.message })
+          this.updateFile(id, { error: err.message })
         })
       })
     },
@@ -60,8 +60,14 @@ export default {
       }
       this.$set(this.files, index, Object.assign({}, this.files[index], data))
     },
-    clearFilesToEnc () {
+    clearFiles () {
       this.files = []
+    },
+    deleteFile ({ id }) {
+      const index = this.files.findIndex(file => file.id === id)
+      if (index !== -1) { // if -1 assume deleted
+        this.$delete(this.files, index)
+      }
     }
   }
 }
