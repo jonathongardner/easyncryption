@@ -1,8 +1,6 @@
 <template>
   <div class="file has-name is-centered">
-    <p class="has-error" v-if='error'>
-      {{ error }}
-    </p>
+    <error-message v-model='error' />
     <label class="file-label">
       <input ref='fileInput' class="file-input" type="file" :name="type" :accept="accept" @change='addFile' :disabled='loading'>
       <span class="file-cta">
@@ -17,17 +15,19 @@
         </span>
       </span>
       <span v-if='hasValue' class="file-name">
-        {{ encLabel }} encryption using {{ value.filename }}
+        {{ encLabel }} {{ type }} using {{ value.filename }}
       </span>
     </label>
   </div>
 </template>
 
 <script>
+import ErrorMessage from '@/components/layout/error-message'
 import { parseEnkFile } from '@/helpers/file-functions'
 
 export default {
   name: 'SelectEnk',
+  components: { ErrorMessage },
   props: {
     value: {
       type: Object,
@@ -41,7 +41,7 @@ export default {
   data () {
     return {
       loading: false,
-      error: null,
+      error: '',
     }
   },
   computed: {
@@ -79,7 +79,7 @@ export default {
   methods: {
     async addFile () {
       this.loading = true
-      this.error = null
+      this.error = ''
       const file = this.$refs.fileInput.files[0]
       if (file) {
         const input = await this.parseEnkFile(file)

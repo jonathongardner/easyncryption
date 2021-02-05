@@ -23,18 +23,19 @@ const download = (filename, uri) => {
 
   document.body.removeChild(element);
 }
-
+export const textDataURL = (text) => {
+  return `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`
+}
 // returns promise encrypted string
 export const encryptFile = async (key, file) => {
   const { encryption: { encrypt } } = key
   const dataURL = await readDataURL(file)
   const encText = await encrypt(key, dataURL)
   const appVersion = process.env.VUE_APP_VERSION
-  console.log(appVersion)
-  const toDownload = [appVersion, ...encText].join('\n')
-
   const encFilename = `${file.name}.enc`
-  const encDataURL = `data:text/plain;charset=utf-8,${encodeURIComponent(toDownload)}`
+  console.log(appVersion)
+
+  const encDataURL = textDataURL([appVersion, ...encText].join('\n'))
   download(encFilename, encDataURL)
 
   return { encFilename, encDataURL }

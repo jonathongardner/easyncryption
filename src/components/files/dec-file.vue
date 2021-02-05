@@ -4,9 +4,9 @@
     <file-overlay v-if='loading'>
       <progress class="progress is-small is-dark" max="100"></progress>
     </file-overlay>
-    <file-overlay v-else-if='error' class='my-hover'>
+    <file-overlay v-else-if='error'>
       <p class="has-text-white	">
-        Could not decrypt file, try again. If this continues file could be corrupt or it is the incorrect key.
+        Could not decrypt file, try again. If this continues ensure you are using the decryption key matching the encrpytion key.
       </p>
     </file-overlay>
     <file-overlay v-else class='my-hover'>

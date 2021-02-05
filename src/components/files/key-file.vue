@@ -1,15 +1,6 @@
 <template>
-  <a class="enc-file" :href='file.encDataURL' :download='file.encFilename'>
-    <button class='delete' @click='deleteThis'></button>
-    <file-overlay v-if='loading'>
-      <progress class="progress is-small is-dark" max="100"></progress>
-    </file-overlay>
-    <file-overlay v-else-if='error'>
-      <p class="has-text-white	">
-        Could not encrypt file, try again. If this continues key could be corrupt or file could be to large.
-      </p>
-    </file-overlay>
-    <file-overlay v-else class='my-hover'>
+  <a class="key-file" :href='file.dataURL' :download='file.filename'>
+    <file-overlay class='my-hover'>
       <span class="icon is-small has-text-white	">
         <i class="fas fa-download"></i>
       </span>
@@ -22,8 +13,7 @@
     </div>
     <div>
       <span class='icon'>
-        <i class="fas fa-exclamation-circle" v-if='error'></i>
-        <i class="fas fa-lock" v-else></i>
+        <i class="fas fa-key"></i>
       </span>
     </div>
   </a>
@@ -60,7 +50,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.enc-file {
+.key-file {
   color: #2c3e50;
   position: relative;
   width: 150px;
@@ -79,17 +69,11 @@ export default {
       margin: 0px auto;
     }
   }
-  .delete {
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    transform: translate(40%, -40%);
-  }
   .my-hover {
     display: none;
   }
 }
-.enc-file:hover {
+.key-file:hover {
   .my-hover {
     display: flex;
   }

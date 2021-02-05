@@ -1,17 +1,19 @@
 <template>
   <div id="app">
+    <generate-key />
     <encrypt />
     <decrypt />
   </div>
 </template>
 
 <script>
+import GenerateKey from '@/components/generate-key'
 import Encrypt from '@/components/encrypt'
 import Decrypt from '@/components/decrypt'
 export default {
   name: 'App',
   components: {
-    Encrypt, Decrypt
+    GenerateKey, Encrypt, Decrypt
   }
 }
 </script>
