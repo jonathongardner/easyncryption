@@ -1,9 +1,7 @@
 <template>
-  <div class="control">
-    <input class="input" :type='type' :disabled='disabled' :name='name'
-      :placeholder="placeholder" :value='value' @input='input'
-      :autocomplete="autocomplete" :required='required'>
-  </div>
+  <input class="input" :type='type' :disabled='disabled' :name='name'
+    :placeholder="placeholder" :value='value' @input='input'
+    :autocomplete="autocomplete" :required='required'>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="file has-name is-centered">
+  <div class="file is-centered" :class="{ 'has-name': hasValue }">
     <error-message v-model='error' />
     <label class="file-label">
       <input ref='fileInput' class="file-input" type="file" :name="type" :accept="accept" @change='addFile' :disabled='loading'>
@@ -14,8 +14,8 @@
           Select {{ type }} key file
         </span>
       </span>
-      <span v-if='hasValue' class="file-name">
-        {{ encLabel }} {{ type }} using {{ value.filename }}
+      <span v-if='hasValue' class="file-name has-text-white" :title='nameText'>
+        {{ nameText }}
       </span>
     </label>
   </div>
@@ -45,6 +45,12 @@ export default {
     }
   },
   computed: {
+    nameText () {
+      if (!this.value) {
+        return ''
+      }
+      return `${this.encLabel} ${this.type} using ${this.value.filename}`
+    },
     hasValue () {
       return !!this.value.filename
     },

@@ -1,0 +1,71 @@
+@charset "utf-8";
+
+// https://coolors.co/f55e61-88a2aa-ada296-f42c04-0f1a20
+// https://coolors.co/f55e61-88a2aa-588b8b-f42c04-ffffff
+// $light-red: #F55E61;
+$blue-grey: #2c3e50;
+// $grey-blue: #88A2AA;
+// $grey-brown: #ADA296;
+// $orange: #F42C04;
+// $black-blue: #0F1A20;
+
+// Update Bulma's global variables
+// $family-sans-serif: "Nunito", sans-serif;
+// $primary: $light-red;
+// $link: $blue
+// $info: $grey-blue;
+// $success: $blue-grey;
+// $warning: $grey-brown;
+// $danger: $orange;
+// $dark: $grey-darker
+// $text: $grey-dark
+
+$footer-padding: 1.5rem 1.5rem 1.5rem;
+// $navbar-background-color: $light-green;
+// $navbar-item-hover-background-color: #bbd1ba;
+// $navbar-item-hover-color:
+@import "./../../node_modules/bulma/bulma.sass";
+// @import "./../../node_modules/bulma-switch/dist/css/bulma-switch.sass";
+// Import only what you need from Bulma
+// @import "./../../node_modules/bulma/sass/utilities/_all.sass";
+// @import "./../../node_modules/bulma/sass/base/_all.sass";
+// @import "./../../node_modules/bulma/sass/elements/button.sass";
+// @import "./../../node_modules/bulma/sass/elements/container.sass";
+// @import "./../../node_modules/bulma/sass/elements/form.sass";
+// @import "./../../node_modules/bulma/sass/elements/title.sass";
+// @import "./../../node_modules/bulma/sass/components/navbar.sass";
+// @import "./../../node_modules/bulma/sass/layout/hero.sass";
+// @import "./../../node_modules/bulma/sass/layout/section.sass";
+// @import "./../../node_modules/bulma-pageloader/dist/css/bulma-pageloader.sass"; "bulma-pageloader": "^2.1.0",
+
+// Set burger menu to overlay notpush down
+@media only screen and (max-width: $desktop) {
+  #ath-ex-navbar {
+    position: absolute;
+    width: 100%;
+  }
+}
+
+// Add color support for table rows https://github.com/jgthms/bulma/issues/1525
+.table tr {
+  @each $name, $pair in $colors {
+    $color: nth($pair, 1);
+    $color-invert: nth($pair, 2);
+    &.is-#{$name} {
+      background-color: $color;
+      color: $color-invert;
+    }
+  }
+}
+
+.table.is-hoverable tbody tr:not(.is-selected) {
+  @each $name, $pair in $colors {
+    $color: nth($pair, 1);
+    $color-invert: nth($pair, 2);
+    &:hover.is-#{$name},
+    &.is-hovered.is-#{$name} {
+      background-color: darken($color, 2.5%);
+      color: $color-invert;
+    }
+  }
+}

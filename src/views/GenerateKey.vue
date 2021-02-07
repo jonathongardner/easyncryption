@@ -1,23 +1,24 @@
 <template>
   <div>
     <error-message v-model='error' />
-    <form @submit="stop">
-      <div class="field">
-        <label class="label">Encryption Type</label>
+    <form class="field has-addons" @submit='stopSubmit'>
+      <p class="control">
         <my-select v-model='type' :options='encryptions' :disabled='loading' />
-      </div>
-      <div class="field">
-        <label class="label">Identifier</label>
+      </p>
+      <p class="control is-expanded">
         <my-input v-model='identifier' :disabled='loading' placeholder='Identifier'/>
-      </div>
-      <div class="field">
-        <div class="control">
-          <button class="button is-success" :class="{ 'is-loading': loading }" @click='generateKey' :disabled='disableGenerate' type='submit'>
-            Generate
-          </button>
-        </div>
-      </div>
+      </p>
+      <p class="control">
+        <button class="button is-success" :class="{ 'is-loading': loading }" @click='generateKey' :disabled='disableGenerate' type='submit'>
+          Generate
+        </button>
+      </p>
     </form>
+    <files :files='files'>
+      <template v-slot:default="{ file }">
+        <key-file :file='file' />
+      </template>
+    </files>
   </div>
 </template>
 
@@ -25,26 +26,23 @@
 import ErrorMessage from '@/components/layout/error-message'
 import MySelect from '@/components/form/my-select'
 import MyInput from '@/components/form/my-input'
+import Files from '@/components/files/files'
+import KeyFile from '@/components/files/key-file'
 import { encryptions, textDataURL } from '@/helpers/encryptions'
 
 export default {
-  name: 'GenerateKeyForm',
+  name: 'GenerateKey',
   components: {
-    ErrorMessage, MySelect, MyInput
+    ErrorMessage, MySelect, MyInput, Files, KeyFile
   },
-  props: {
-    value: {
-      type: Array,
-      required: true,
-    }
-  },
-  data() {
+  data () {
     return {
       loading: false,
       error: '',
       type: 'rsa+aes',
       identifier: '',
       encryptions: Object.values(encryptions).filter(enc => !enc.ignore).map(enc => ({ value: enc.type, label: enc.label })),
+      files: []
     }
   },
   computed: {
@@ -53,28 +51,28 @@ export default {
     },
   },
   methods: {
-    stop (evt) {
-      evt.preventDefault()
+    stopSubmit (e) {
+      // use form so enter defaults
+      e.preventDefault()
     },
     generateKey () {
       if (this.disableGenerate) {
         return
       }
-      this.$emit('input', [])
+      this.files = []
       this.error = ''
       this.loading = true
       const enc = encryptions[this.type]
       const ident = this.identifier ? this.identifier : `${enc.type}-EasyNCRYPTION`
 
       enc.generateKey().then(keys => {
-        const files = keys.map((key) => {
+        this.files = keys.map((key) => {
           const jsonString = JSON.stringify({ type: enc.type, identifier: ident, ...key.toSave })
           return {
             filename: `${ident}${key.extension}`,
             dataURL: textDataURL(jsonString)
           }
         })
-        this.$emit('input', files)
       }).catch(error => {
         this.error = error.message
       }).then(() => {
@@ -84,3 +82,6 @@ export default {
   }
 }
 </script>
+
+<style lang='scss' scoped>
+</style>
