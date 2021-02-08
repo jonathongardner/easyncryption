@@ -2,13 +2,13 @@
   <div class="key-file">
     <button v-if='hasDelete' class='delete' @click='deleteThis'></button>
     <a :href='file.dataURL' :download='file.downloadFilename || file.filename'>
-      <file-overlay v-if='loading'>
-        <progress class="progress is-small is-dark" max="100"></progress>
-      </file-overlay>
-      <file-overlay v-else-if='error'>
+      <file-overlay v-if='error'>
         <p class="has-text-white	">
           {{ file | errorMessage }}
         </p>
+      </file-overlay>
+      <file-overlay v-else-if='loading'>
+        <progress class="progress is-small is-dark" max="100"></progress>
       </file-overlay>
       <file-overlay v-else class='my-hover'>
         <span class="icon is-small has-text-white	">

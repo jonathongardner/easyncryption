@@ -6,7 +6,7 @@ export default {
   label: 'RSA+AES',
   generateKey: RSA.generateKey,
   encrypt: async ({ encryptionKey: rsaKey }, text) => {
-    const [{toSave: { encryptionKey: aesKey }}] = await AES.generateKey()
+    const { private: { encryptionKey: aesKey } } = await AES.generateKey()
     const aesKeyToEnc = JSON.stringify(aesKey)
 
     const toReturn = await Promise.all(

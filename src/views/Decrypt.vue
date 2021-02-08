@@ -46,6 +46,7 @@ export default {
         decryptFile(this.encKey, file).then(({ filename, dataURL }) => {
           this.updateFile(id, { downloadFilename: filename, dataURL })
         }).catch(err => {
+          console.log(err)
           this.updateFile(id, { error: err.message })
         })
       })
