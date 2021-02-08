@@ -3,23 +3,48 @@
     <nav-bar id='nav' />
     <router-view id='body' />
     <footer-bar id='footer' />
+    <modal v-if='!hasAccepted'>
+      <template v-slot:header>
+        <p class="modal-card-title">Accept Responsibility</p>
+      </template>
+      <template v-slot:body>
+        The developer of this site takes no responsibility for incorrect or poorly
+        encrypted files using this application.
+        It is up to the user to ensure that all files are encrypted correctly and meet their standards.
+        Before using the user should have a good understanding of ecryption methods
+        and how to ensure that files are encrypted correctly. <br><br>
+        By using this app I accept all responsibilities.
+      </template>
+      <template v-slot:footer>
+        <button class="button is-success" @click='accept' >Accept</button>
+      </template>
+    </modal>
   </div>
 </template>
 
 <script>
 import NavBar from '@/components/nav'
 import FooterBar from '@/components/footer'
+import Modal from '@/components/layout/modal'
 
 export default {
   name: 'App',
   components: {
-    NavBar, FooterBar
+    NavBar, FooterBar, Modal
   },
   data () {
     return {
+      hasAccepted: false
     }
   },
   methods: {
+    accept () {
+      localStorage.setItem("acceptedResponsibility", true)
+      this.hasAccepted = true
+    }
+  },
+  created () {
+    this.hasAccepted = localStorage.getItem("acceptedResponsibility")
   }
 }
 </script>

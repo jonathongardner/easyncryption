@@ -20,5 +20,9 @@ npm run build
 npm run lint
 ```
 
+### TODO
+- Add source link to footer
+- Cleanup README
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
