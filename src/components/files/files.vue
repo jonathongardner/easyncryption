@@ -5,17 +5,22 @@
         Clear
       </button>
     </div>
-    <div class='files'>
+    <div class='files has-text-centered'>
       <template v-for='file in files'>
-        <slot v-bind:file='file' />
+        <file-el :file='file' :key='file.id' v-if='hasDelete' @delete='deleteFile' />
+        <file-el :file='file' :key='file.id' v-else />
       </template>
     </div>
   </div>
 </template>
 
 <script>
+import FileEl from '@/components/files/file'
 export default {
   name: 'Files',
+  components: {
+    FileEl,
+  },
   props: {
     files: {
       type: Array,
@@ -23,6 +28,9 @@ export default {
     },
   },
   computed: {
+    hasDelete () {
+      return this.$listeners && this.$listeners.delete
+    },
     anyFiles () {
       return this.files.length
     },
@@ -33,6 +41,9 @@ export default {
   methods: {
     clearFiles () {
       this.$emit('clear')
+    },
+    deleteFile (file) {
+      this.$emit('delete', file)
     }
   }
 }
@@ -40,6 +51,7 @@ export default {
 
 <style scoped lang="scss">
 .files {
+  min-height: 170px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

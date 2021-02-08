@@ -14,10 +14,10 @@ export default {
         } else {
           const encryptionKey = publicKeyToPem(publicKey)
 
-          res([
-            { extension: '.enk', toSave: { decryptionKey: privateKeyToPem(privateKey), encryptionKey }, name: 'Public Key' },
-            { extension: '.enk.pub', toSave: { encryptionKey }, name: 'Private Key' },
-          ])
+          res({
+            private: { decryptionKey: privateKeyToPem(privateKey), encryptionKey },
+            public: { encryptionKey },
+          })
         }
       });
 

@@ -14,11 +14,7 @@
         </button>
       </p>
     </form>
-    <files :files='files'>
-      <template v-slot:default="{ file }">
-        <key-file :file='file' />
-      </template>
-    </files>
+    <files :files='files' />
   </div>
 </template>
 
@@ -27,13 +23,12 @@ import ErrorMessage from '@/components/layout/error-message'
 import MySelect from '@/components/form/my-select'
 import MyInput from '@/components/form/my-input'
 import Files from '@/components/files/files'
-import KeyFile from '@/components/files/key-file'
 import { encryptions, textDataURL } from '@/helpers/encryptions'
 
 export default {
   name: 'GenerateKey',
   components: {
-    ErrorMessage, MySelect, MyInput, Files, KeyFile
+    ErrorMessage, MySelect, MyInput, Files
   },
   data () {
     return {
@@ -66,13 +61,22 @@ export default {
       const ident = this.identifier ? this.identifier : `${enc.type}-EasyNCRYPTION`
 
       enc.generateKey().then(keys => {
-        this.files = keys.map((key) => {
-          const jsonString = JSON.stringify({ type: enc.type, identifier: ident, ...key.toSave })
-          return {
-            filename: `${ident}${key.extension}`,
-            dataURL: textDataURL(jsonString)
-          }
-        })
+        if (keys.private) {
+          const jsonString = JSON.stringify({ type: enc.type, identifier: ident, ...keys.private })
+          this.files.push({
+            filename: `${ident}.enk`,
+            dataURL: textDataURL(jsonString),
+            type: 'generate-key'
+          })
+        }
+        if (keys.public) {
+          const jsonString = JSON.stringify({ type: enc.type, identifier: ident, ...keys.public })
+          this.files.push({
+            filename: `${ident}.enk.pub`,
+            dataURL: textDataURL(jsonString),
+            type: 'generate-key'
+          })
+        }
       }).catch(error => {
         this.error = error.message
       }).then(() => {

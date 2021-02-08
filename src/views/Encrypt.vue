@@ -1,30 +1,27 @@
 <template>
   <div>
     <select-enk :value='encKey' @input='keyChanged' />
-    <template v-if='hasEncKey'>
-      <select-files @add='addEncFiles'>
-        Select Files to Encrypt
-      </select-files>
-      <files :files='files' @clear='clearFiles'>
-        <template v-slot:default="{ file }">
-          <enc-file :file='file' @delete='deleteFile'/>
-        </template>
-      </files>
-    </template>
+    <select-or-drag-files v-hide='noEncKey' @add='addEncFiles'>
+      <template v-slot:label>
+        Select files to Encrypt or drag them here
+      </template>
+      <template v-slot:body>
+        <files :files='files' @clear='clearFiles' @delete='deleteFile' />
+      </template>
+    </select-or-drag-files>
   </div>
 </template>
 
 <script>
 import SelectEnk from '@/components/form/select-enk'
-import SelectFiles from '@/components/form/select-files'
+import SelectOrDragFiles from '@/components/form/select-or-drag-files'
 import Files from '@/components/files/files'
-import EncFile from '@/components/files/enc-file'
 import { encryptFile } from '@/helpers/encryptions'
 
 export default {
   name: 'Encrypt',
   components: {
-    SelectEnk, SelectFiles, Files, EncFile
+    SelectEnk, SelectOrDragFiles, Files
   },
   data () {
     return {
@@ -33,8 +30,8 @@ export default {
     }
   },
   computed: {
-    hasEncKey () {
-      return !!this.encKey.filename
+    noEncKey () {
+      return !this.encKey.filename
     }
   },
   methods: {
@@ -45,9 +42,9 @@ export default {
     addEncFiles (files) {
       files.forEach(file => {
         const id = Math.random()
-        this.files.push({ filename: file.name, id })
+        this.files.push({ filename: file.name, id, type: 'encryption' })
         encryptFile(this.encKey, file).then(({ encFilename, encDataURL }) => {
-          this.updateFile(id, { encFilename, encDataURL })
+          this.updateFile(id, { downloadFilename: encFilename, dataURL: encDataURL })
         }).catch(err => {
           this.updateFile(id, { error: err.message })
         })
@@ -72,3 +69,6 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+</style>

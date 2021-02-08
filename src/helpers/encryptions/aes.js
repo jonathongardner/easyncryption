@@ -8,9 +8,7 @@ export default {
     // return promise so in future can maybe use webworkers to do async?
     // also rsa already uses async webworkers so...
     const key = { key: encode64(getBytesSync(length)), iv: encode64(getBytesSync(length)) }
-    return Promise.resolve([
-      { extension: '.enk', toSave: { encryptionKey: key, decryptionKey: key }, name: 'Private Key' }
-    ])
+    return Promise.resolve({ private: { encryptionKey: key, decryptionKey: key } })
   },
   encrypt: ({ encryptionKey }, text) => {
     const key = decode64(encryptionKey.key)

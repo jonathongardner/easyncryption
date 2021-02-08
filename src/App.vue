@@ -56,4 +56,16 @@ export default {
 body {
   margin: 0px;
 }
+.secret-button {
+  margin: 5px;
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  /*optional*/
+  font-family: arial, sans-serif;
+  /*input has OS specific font-family*/
+  color: #069;
+  text-decoration: underline;
+  cursor: pointer;
+}
 </style>

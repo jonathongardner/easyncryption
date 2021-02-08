@@ -8,7 +8,7 @@
             <i class="fas fa-upload"></i>
           </span>
           <span class="file-label">
-            <slot />
+            <slot name='label' />
           </span>
         </span>
       </label>

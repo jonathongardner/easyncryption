@@ -1,30 +1,27 @@
 <template>
   <div>
     <select-enk :value='encKey' @input='keyChanged' decryption />
-    <template v-if='hasEncKey'>
-      <select-files @add='addEncFiles' :accept="['.enc']">
-        Select Files to Decrypt
-      </select-files>
-      <files :files='files' @clear='clearFiles'>
-        <template v-slot:default="{ file }">
-          <dec-file :file='file' @delete='deleteFile'/>
-        </template>
-      </files>
-    </template>
+    <select-or-drag-files v-hide='noEncKey' @add='addEncFiles' :accept="['.enc']">
+      <template v-slot:label>
+        Select files to Decrypt or drag them here
+      </template>
+      <template v-slot:body>
+        <files :files='files' @clear='clearFiles' @delete='deleteFile' />
+      </template>
+    </select-or-drag-files>
   </div>
 </template>
 
 <script>
 import SelectEnk from '@/components/form/select-enk'
-import SelectFiles from '@/components/form/select-files'
+import SelectOrDragFiles from '@/components/form/select-or-drag-files'
 import Files from '@/components/files/files'
-import DecFile from '@/components/files/dec-file'
 import { decryptFile } from '@/helpers/encryptions'
 
 export default {
   name: 'Decrypt',
   components: {
-    SelectEnk, SelectFiles, Files, DecFile
+    SelectEnk, SelectOrDragFiles, Files
   },
   data () {
     return {
@@ -33,8 +30,8 @@ export default {
     }
   },
   computed: {
-    hasEncKey () {
-      return !!this.encKey.filename
+    noEncKey () {
+      return !this.encKey.filename
     }
   },
   methods: {
@@ -45,9 +42,9 @@ export default {
     addEncFiles (files) {
       files.forEach(file => {
         const id = Math.random()
-        this.files.push({ encFilename: file.name, id })
+        this.files.push({ filename: file.name, id, type: 'decryption' })
         decryptFile(this.encKey, file).then(({ filename, dataURL }) => {
-          this.updateFile(id, { filename, dataURL })
+          this.updateFile(id, { downloadFilename: filename, dataURL })
         }).catch(err => {
           this.updateFile(id, { error: err.message })
         })
