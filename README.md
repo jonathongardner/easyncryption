@@ -70,4 +70,3 @@ npm run lint # Lints and fixes files
 ```
 
 ### TODO
-- Add source link to footer

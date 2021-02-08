@@ -1,5 +1,11 @@
 <template>
-  <footer>
+  <footer class='has-text-centered has-text-white'>
+    <a href='https://github.com/jonathongardner/easyncryption'>
+      <span class='icon'>
+        <i class="fab fa-github"></i>
+      </span>
+      Source
+    </a>
   </footer>
 </template>
 
