@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <router-link to='/generate-key' class="button">
+      <router-link :to='{ name: "generate-key" }' class="button">
         <span class="icon">
           <i class="fas fa-key"></i>
         </span>
@@ -9,7 +9,7 @@
       </router-link>
     </div>
     <div>
-      <router-link to='/encrypt' class="button">
+      <router-link :to='{ name: "encrypt" }' class="button">
         <span class="icon">
           <i class="fas fa-lock"></i>
         </span>
@@ -17,7 +17,7 @@
       </router-link>
     </div>
     <div>
-      <router-link to='/decrypt' class="button">
+      <router-link :to='{ name: "decrypt" }' class="button">
         <span class="icon">
           <i class="fas fa-unlock"></i>
         </span>
